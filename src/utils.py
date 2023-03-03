@@ -1,41 +1,22 @@
 import random
+import string
+from loguru import logger
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
-
-numbers = '1234567890'
-letters = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'
-symbols = '!@#$%^&*)(_-+=}{><?'
 
 
 def kb(buttons: [KeyboardButton]):
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
 
-# def generate_part(length=1, symbols_on=True, numbers_on=True):
-#     part = ''
-
-#     arr = random.choices(numbers+letters+symbols, k=length)
-
-#     for sign in arr:
-#         part += sign
-
-#     return part
-
-
-def generate_password(settings):
-    length = settings['length']
-    symbols_on = settings['symbols']
-    numbers_on = settings['numbers']
-
+def generate_password(length: int, symbols_on, numbers_on):
     password = ''
 
-    for _ in range(length):
-        if symbols_on and numbers_on:
-            password += random.choice(letters+numbers+symbols)
-        elif symbols and not numbers:
-            password += random.choice(letters+symbols)
-        elif numbers and not symbols:
-            password += random.choice(letters+numbers)
-        else:
-            password += random.choice(letters)
+    while len(password) < length:
+        password += random.choice(string.ascii_letters)
 
-    return password
+        if symbols_on:
+            password += random.choice(string.punctuation)
+        if numbers_on:
+            password += random.choice(string.digits)
+
+    return password[:length]

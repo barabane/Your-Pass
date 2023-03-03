@@ -24,7 +24,8 @@ class DB:
         if user:
             return user
 
-        return 'такого пользователя не существует'
+        logger.error("user not exists")
+        return {}
 
     def reg_user(self, msg: Message):
         exists = self.cursor.execute(
@@ -50,7 +51,7 @@ class DB:
 
     def change_settings(self, user_id: int, new_settings: str):
         self.cursor.execute(
-            "UPDATE users SET settings=? WHERE id=?", (new_settings, user_id))
+            f"UPDATE users SET settings=? WHERE id=?", (new_settings, user_id))
         logger.info(f"user({user_id}) settings updated")
         self.conn.commit()
 
